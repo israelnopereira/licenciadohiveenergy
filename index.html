@@ -42,7 +42,6 @@
             inset: 0;
             width: 100%;
             height: 100%;
-            touch-action: none;
         }
 
         ::-webkit-scrollbar {
@@ -127,12 +126,15 @@
             border-radius: 0 !important;
             border: 0 !important;
             overflow: hidden !important;
-            transform: translateZ(0);
-            -webkit-transform: translateZ(0);
+            background: #000000 !important;
         }
 
         .video-responsive-container.is-ios-fullscreen iframe {
             border-radius: 0 !important;
+        }
+
+        .video-responsive-container.is-ios-fullscreen .video-click-blocker {
+            pointer-events: none;
         }
 
         .video-custom-controls {
@@ -147,8 +149,12 @@
         }
 
         .video-responsive-container.is-ios-fullscreen .video-custom-controls {
-            z-index: 10001;
-            bottom: max(16px, env(safe-area-inset-bottom));
+            position: fixed !important;
+            left: 50% !important;
+            bottom: max(18px, env(safe-area-inset-bottom)) !important;
+            z-index: 2147483647 !important;
+            transform: translateX(-50%) !important;
+            pointer-events: auto !important;
         }
 
         .video-control-button {
@@ -169,6 +175,8 @@
             cursor: pointer;
             -webkit-tap-highlight-color: transparent;
             touch-action: manipulation;
+            user-select: none;
+            -webkit-user-select: none;
         }
 
         .video-control-button:hover {
@@ -260,35 +268,23 @@
                 <div class="video-click-blocker" aria-hidden="true"></div>
 
                 <div class="video-custom-controls">
-                    <button class="video-control-button" type="button" onclick="playVideo()" aria-label="Reproduzir">
+                    <button id="play-button" class="video-control-button" type="button" aria-label="Reproduzir">
                         ▶
                     </button>
 
-                    <button class="video-control-button" type="button" onclick="pauseVideo()" aria-label="Pausar">
+                    <button id="pause-button" class="video-control-button" type="button" aria-label="Pausar">
                         ❚❚
                     </button>
 
-                    <button class="video-control-button" type="button" onclick="restartVideo()" aria-label="Recomeçar">
+                    <button id="restart-button" class="video-control-button" type="button" aria-label="Recomeçar">
                         ↻
                     </button>
 
-                    <button
-                        id="volume-button"
-                        class="video-control-button"
-                        type="button"
-                        onclick="toggleMute()"
-                        aria-label="Ativar som"
-                    >
+                    <button id="volume-button" class="video-control-button" type="button" aria-label="Ativar som">
                         🔇
                     </button>
 
-                    <button
-                        id="fullscreen-button"
-                        class="video-control-button"
-                        type="button"
-                        onclick="toggleFullscreen()"
-                        aria-label="Aumentar tela"
-                    >
+                    <button id="fullscreen-button" class="video-control-button" type="button" aria-label="Aumentar tela">
                         ⛶
                     </button>
                 </div>
@@ -299,7 +295,6 @@
             <button
                 id="cta-button"
                 class="opacity-0 translate-y-8 pointer-events-none transition-all duration-1000 ease-out w-full h-full bg-hive-purple hover:bg-hive-purpleHover text-white font-bold text-[clamp(0.75rem,2.5vw,1.15rem)] whitespace-nowrap px-4 rounded-lg md:rounded-xl uppercase tracking-wide border border-white/20"
-                onclick="onClickCta()"
             >
                 Quero reduzir minha conta de energia
             </button>
@@ -456,8 +451,6 @@
             );
         }
 
-        document.addEventListener('fullscreenchange', updateFullscreenButton);
-
         function onClickCta() {
             window.location.href = 'https://contaenergia.hiveglobal.com.br/?planId=de9ef5b8d2eeaae8&sellerId=israelnpereira';
         }
@@ -492,6 +485,35 @@
             ctaVisible = true;
             clearInterval(timeTrackerInterval);
         }
+
+        function bindButton(buttonId, callback) {
+            const button = document.getElementById(buttonId);
+
+            if (!button) {
+                return;
+            }
+
+            button.addEventListener('click', function (event) {
+                event.preventDefault();
+                event.stopPropagation();
+                callback();
+            });
+
+            button.addEventListener('touchend', function (event) {
+                event.preventDefault();
+                event.stopPropagation();
+                callback();
+            }, { passive: false });
+        }
+
+        bindButton('play-button', playVideo);
+        bindButton('pause-button', pauseVideo);
+        bindButton('restart-button', restartVideo);
+        bindButton('volume-button', toggleMute);
+        bindButton('fullscreen-button', toggleFullscreen);
+        bindButton('cta-button', onClickCta);
+
+        document.addEventListener('fullscreenchange', updateFullscreenButton);
     </script>
 
 </body>
