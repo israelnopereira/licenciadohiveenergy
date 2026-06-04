@@ -2,19 +2,19 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-width=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hive Energy - Transformação Energética</title>
-    
+
     <script src="https://cdn.tailwindcss.com"></script>
-    
+
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
                         hive: {
-                            purple: '#7f60fd', /* Cor atualizada conforme seu pedido */
-                            purpleHover: '#6246d8', /* Tom ligeiramente mais escuro para o hover do botão */
+                            purple: '#7f60fd',
+                            purpleHover: '#6246d8',
                             dark: '#000000'
                         }
                     },
@@ -28,57 +28,127 @@
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-        
+
         body {
-            /* UX/UI Best Practice: Degradê radial (Spotlight) começando no topo e sumindo para o preto absoluto */
             background-color: #000000;
             background-image: radial-gradient(ellipse at 50% -20%, #7f60fd 0%, #000000 65%);
             background-attachment: fixed;
             -webkit-font-smoothing: antialiased;
         }
 
-        /* Esconde a barra de rolagem visualmente, mas mantém acessibilidade em telas minúsculas */
-        ::-webkit-scrollbar { width: 0px; background: transparent; }
-        
-        /* Efeito de pulso suave para o botão quando visível */
-        @keyframes pulse-soft {
-            0% { box-shadow: 0 0 0 0 rgba(127, 96, 253, 0.4); }
-            70% { box-shadow: 0 0 0 15px rgba(127, 96, 253, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(127, 96, 253, 0); }
+        ::-webkit-scrollbar {
+            width: 0;
+            background: transparent;
         }
-        
+
+        @keyframes pulse-soft {
+            0% {
+                box-shadow: 0 0 0 0 rgba(127, 96, 253, 0.4);
+            }
+
+            70% {
+                box-shadow: 0 0 0 15px rgba(127, 96, 253, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(127, 96, 253, 0);
+            }
+        }
+
         .btn-pulse {
             animation: pulse-soft 2s infinite;
         }
 
-        /* Container do vídeo mantendo a proporção 16:9 dinâmica e responsiva */
         .video-responsive-container {
             position: relative;
             width: 100%;
             max-height: 100%;
             aspect-ratio: 16 / 9;
         }
-        
+
         .video-responsive-container iframe {
             position: absolute;
-            top: 0;
-            left: 0;
+            inset: 0;
             width: 100%;
             height: 100%;
             border-radius: inherit;
+            pointer-events: none;
+        }
+
+        .video-responsive-container:fullscreen {
+            width: 100vw;
+            height: 100vh;
+            max-height: none;
+            aspect-ratio: auto;
+            border-radius: 0;
+            border: 0;
+        }
+
+        .video-responsive-container:fullscreen iframe {
+            border-radius: 0;
+        }
+
+        .video-custom-controls {
+            position: absolute;
+            left: 50%;
+            bottom: 16px;
+            z-index: 5;
+            display: flex;
+            gap: 10px;
+            transform: translateX(-50%);
+        }
+
+        .video-control-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 44px;
+            height: 44px;
+            padding: 0 14px;
+            border-radius: 999px;
+            color: #ffffff;
+            background: rgba(0, 0, 0, 0.72);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            backdrop-filter: blur(8px);
+            transition: background 0.2s ease, transform 0.2s ease;
+        }
+
+        .video-control-button:hover {
+            background: rgba(127, 96, 253, 0.9);
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 767px) {
+            .video-responsive-container {
+                width: min(100%, 368px);
+                aspect-ratio: 9 / 16;
+            }
+
+            .video-custom-controls {
+                bottom: 12px;
+                gap: 8px;
+            }
+
+            .video-control-button {
+                min-width: 40px;
+                height: 40px;
+                padding: 0 12px;
+            }
         }
     </style>
 </head>
+
 <body class="text-white min-h-[100dvh] flex flex-col items-center justify-center overflow-x-hidden">
 
     <main class="w-full max-w-6xl h-[100dvh] min-h-[650px] flex flex-col items-center justify-between px-4 py-4 md:py-8 mx-auto">
-        
+
         <header class="flex flex-col items-center gap-4 text-center shrink-0 w-full z-10">
             <div class="inline-flex items-center gap-2 bg-white/5 border border-white/10 px-3 py-1 rounded-full backdrop-blur-sm">
                 <span class="relative flex h-2.5 w-2.5">
-                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                  <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
                 </span>
+
                 <span class="text-[clamp(0.6rem,2vw,0.8rem)] text-gray-300 font-medium tracking-wide">
                     Modelo regulamentado pela Lei 14.300
                 </span>
@@ -94,33 +164,81 @@
 
             <ul class="flex flex-wrap justify-center items-center gap-3 md:gap-6 mt-1 w-full max-w-4xl">
                 <li class="flex items-center gap-1.5 text-[clamp(0.7rem,1.5vw,0.9rem)] font-semibold text-gray-200">
-                    <svg class="w-4 h-4 text-hive-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                    <svg class="w-4 h-4 text-hive-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+                    </svg>
                     Sem instalação
                 </li>
+
                 <li class="flex items-center gap-1.5 text-[clamp(0.7rem,1.5vw,0.9rem)] font-semibold text-gray-200">
-                    <svg class="w-4 h-4 text-hive-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                    <svg class="w-4 h-4 text-hive-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+                    </svg>
                     Sem obras
                 </li>
+
                 <li class="flex items-center gap-1.5 text-[clamp(0.7rem,1.5vw,0.9rem)] font-semibold text-gray-200">
-                    <svg class="w-4 h-4 text-hive-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                    <svg class="w-4 h-4 text-hive-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+                    </svg>
                     Mesma distribuidora
                 </li>
+
                 <li class="flex items-center gap-1.5 text-[clamp(0.7rem,1.5vw,0.9rem)] font-semibold text-gray-200">
-                    <svg class="w-4 h-4 text-hive-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                    <svg class="w-4 h-4 text-hive-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+                    </svg>
                     Economia mensal
                 </li>
             </ul>
         </header>
 
         <section class="flex-1 min-h-0 w-full max-w-4xl flex items-center justify-center my-4 relative z-20">
-            <div class="video-responsive-container rounded-xl md:rounded-2xl shadow-[0_0_50px_-15px_rgba(127,96,253,0.3)] border border-hive-purple/30 bg-black overflow-hidden">
+            <div
+                id="video-container"
+                class="video-responsive-container rounded-xl md:rounded-2xl shadow-[0_0_50px_-15px_rgba(127,96,253,0.3)] border border-hive-purple/30 bg-black overflow-hidden"
+            >
                 <div id="yt-player"></div>
+
+                <div class="video-custom-controls">
+                    <button class="video-control-button" type="button" onclick="playVideo()" aria-label="Reproduzir">
+                        ▶
+                    </button>
+
+                    <button class="video-control-button" type="button" onclick="pauseVideo()" aria-label="Pausar">
+                        ❚❚
+                    </button>
+
+                    <button class="video-control-button" type="button" onclick="restartVideo()" aria-label="Recomeçar">
+                        ↻
+                    </button>
+
+                    <button
+                        id="volume-button"
+                        class="video-control-button"
+                        type="button"
+                        onclick="toggleMute()"
+                        aria-label="Ativar som"
+                    >
+                        🔇
+                    </button>
+
+                    <button
+                        id="fullscreen-button"
+                        class="video-control-button"
+                        type="button"
+                        onclick="toggleFullscreen()"
+                        aria-label="Aumentar tela"
+                    >
+                        ⛶
+                    </button>
+                </div>
             </div>
         </section>
 
         <footer class="w-full max-w-3xl h-[60px] md:h-[80px] shrink-0 flex items-center justify-center relative z-30">
-            <button 
-                id="cta-button" 
+            <button
+                id="cta-button"
                 class="opacity-0 translate-y-8 pointer-events-none transition-all duration-1000 ease-out w-full h-full bg-hive-purple hover:bg-hive-purpleHover text-white font-bold text-[clamp(0.75rem,2.5vw,1.15rem)] whitespace-nowrap px-4 rounded-lg md:rounded-xl uppercase tracking-wide border border-white/20"
                 onclick="onClickCta()"
             >
@@ -131,75 +249,171 @@
     </main>
 
     <script src="https://www.youtube.com/iframe_api"></script>
+
     <script>
-        // Configurações do Player e CTA
-        const VIDEO_ID = '5snGu3dzJL8';
-        const CTA_APPEAR_TIME = 50; // Tempo exato em segundos para o CTA aparecer
-        
+        const MOBILE_VIDEO_ID = 'K6N6LG0jtKI';
+        const DESKTOP_VIDEO_ID = 'ou4kGs5iSqg';
+
+        const MOBILE_CTA_APPEAR_TIME = 278;
+        const DESKTOP_CTA_APPEAR_TIME = 100;
+
+        const isMobile = window.matchMedia('(max-width: 767px)').matches;
+        const videoId = isMobile ? MOBILE_VIDEO_ID : DESKTOP_VIDEO_ID;
+        const ctaAppearTime = isMobile ? MOBILE_CTA_APPEAR_TIME : DESKTOP_CTA_APPEAR_TIME;
+
         let player;
         let timeTrackerInterval;
         let ctaVisible = false;
 
-        // Função obrigatória chamada pela API do YouTube quando o script carrega
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('yt-player', {
-                videoId: VIDEO_ID,
+                videoId,
                 playerVars: {
-                    'autoplay': 0,
-                    'controls': 1,
-                    'modestbranding': 1,
-                    'rel': 0,
-                    'showinfo': 0,
-                    'playsinline': 1
+                    autoplay: 1,
+                    mute: 1,
+                    controls: 0,
+                    disablekb: 1,
+                    fs: 0,
+                    iv_load_policy: 3,
+                    modestbranding: 1,
+                    rel: 0,
+                    playsinline: 1
                 },
                 events: {
-                    'onStateChange': onPlayerStateChange
+                    onReady: onPlayerReady,
+                    onStateChange: onPlayerStateChange
                 }
             });
         }
 
-        // Monitora as mudanças de estado do player (Play, Pause, Fim)
+        function onPlayerReady(event) {
+            event.target.mute();
+            event.target.playVideo();
+            updateVolumeButton();
+        }
+
         function onPlayerStateChange(event) {
-            // Se o vídeo estiver sendo reproduzido
             if (event.data === YT.PlayerState.PLAYING && !ctaVisible) {
-                // Inicia o rastreamento de tempo a cada 500ms
-                timeTrackerInterval = setInterval(checkVideoTime, 500);
-            } 
-            // Se pausar, finalizar ou armazenar em buffer, pausa o rastreador
-            else {
                 clearInterval(timeTrackerInterval);
+                timeTrackerInterval = setInterval(checkVideoTime, 500);
+                return;
+            }
+
+            clearInterval(timeTrackerInterval);
+        }
+
+        function playVideo() {
+            if (player && typeof player.playVideo === 'function') {
+                player.playVideo();
             }
         }
 
-        //Direciona para a url de compra
-        function onClickCta(){
-            window.location.href = "https://contaenergia.hiveglobal.com.br/?planId=de9ef5b8d2eeaae8&sellerId=israelnpereira";
+        function pauseVideo() {
+            if (player && typeof player.pauseVideo === 'function') {
+                player.pauseVideo();
+            }
         }
 
+        function restartVideo() {
+            if (player && typeof player.seekTo === 'function') {
+                player.seekTo(0, true);
+                player.playVideo();
+            }
+        }
 
-        // Checa o tempo atual de reprodução
+        function toggleMute() {
+            if (!player || typeof player.isMuted !== 'function') {
+                return;
+            }
+
+            if (player.isMuted()) {
+                player.unMute();
+                player.setVolume(100);
+            } else {
+                player.mute();
+            }
+
+            updateVolumeButton();
+        }
+
+        function updateVolumeButton() {
+            const volumeButton = document.getElementById('volume-button');
+
+            if (!volumeButton || !player || typeof player.isMuted !== 'function') {
+                return;
+            }
+
+            const isMuted = player.isMuted();
+
+            volumeButton.textContent = isMuted ? '🔇' : '🔊';
+            volumeButton.setAttribute('aria-label', isMuted ? 'Ativar som' : 'Desativar som');
+        }
+
+        function toggleFullscreen() {
+            const videoContainer = document.getElementById('video-container');
+
+            if (!videoContainer) {
+                return;
+            }
+
+            if (!document.fullscreenElement) {
+                videoContainer.requestFullscreen?.();
+                return;
+            }
+
+            document.exitFullscreen?.();
+        }
+
+        function updateFullscreenButton() {
+            const fullscreenButton = document.getElementById('fullscreen-button');
+
+            if (!fullscreenButton) {
+                return;
+            }
+
+            const isFullscreen = Boolean(document.fullscreenElement);
+
+            fullscreenButton.textContent = isFullscreen ? '✕' : '⛶';
+            fullscreenButton.setAttribute('aria-label', isFullscreen ? 'Sair da tela cheia' : 'Aumentar tela');
+        }
+
+        document.addEventListener('fullscreenchange', updateFullscreenButton);
+
+        function onClickCta() {
+            window.location.href = 'https://contaenergia.hiveglobal.com.br/?planId=de9ef5b8d2eeaae8&sellerId=israelnpereira';
+        }
+
         function checkVideoTime() {
-            if (player && player.getCurrentTime) {
-                const currentTime = player.getCurrentTime();
-                
-                // Se atingir ou ultrapassar o tempo configurado
-                if (currentTime >= CTA_APPEAR_TIME) {
-                    revealCTA();
-                }
+            if (!player || typeof player.getCurrentTime !== 'function') {
+                return;
+            }
+
+            if (player.getCurrentTime() >= ctaAppearTime) {
+                revealCTA();
             }
         }
 
-        // Função para exibir o botão (CTA) suavemente
         function revealCTA() {
             const btn = document.getElementById('cta-button');
-            
-            // Troca classes para exibir e animar
+
+            if (!btn || ctaVisible) {
+                return;
+            }
+
             btn.classList.remove('opacity-0', 'translate-y-8', 'pointer-events-none');
-            btn.classList.add('opacity-100', 'translate-y-0', 'pointer-events-auto', 'btn-pulse', 'shadow-[0_4px_25px_rgba(127,96,253,0.5)]');
-            
+
+            btn.classList.add(
+                'opacity-100',
+                'translate-y-0',
+                'pointer-events-auto',
+                'btn-pulse',
+                'shadow-[0_4px_25px_rgba(127,96,253,0.5)]'
+            );
+
             ctaVisible = true;
-            clearInterval(timeTrackerInterval); // Para de checar após exibir
+            clearInterval(timeTrackerInterval);
         }
     </script>
+
 </body>
 </html>
