@@ -5,6 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hive Energy - Transformação Energética</title>
 
+    <!-- Meta Pixel Code -->
+    <script>
+        !function(f,b,e,v,n,t,s)
+        {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+        n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+        if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+        n.queue=[];t=b.createElement(e);t.async=!0;
+        t.src=v;s=b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t,s)}(window, document,'script',
+        'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '2000252847529842');
+        fbq('track', 'PageView');
+    </script>
+    <noscript>
+        <img
+            height="1"
+            width="1"
+            style="display:none"
+            src="https://www.facebook.com/tr?id=2000252847529842&ev=PageView&noscript=1"
+        />
+    </noscript>
+    <!-- End Meta Pixel Code -->
+
     <script src="https://cdn.tailwindcss.com"></script>
 
     <script>
@@ -42,6 +65,7 @@
             inset: 0;
             width: 100%;
             height: 100%;
+            background: #000000;
         }
 
         ::-webkit-scrollbar {
@@ -133,10 +157,6 @@
             border-radius: 0 !important;
         }
 
-        .video-responsive-container.is-ios-fullscreen .video-click-blocker {
-            pointer-events: none;
-        }
-
         .video-custom-controls {
             position: absolute;
             left: 50%;
@@ -148,13 +168,23 @@
             pointer-events: auto;
         }
 
-        .video-responsive-container.is-ios-fullscreen .video-custom-controls {
-            position: fixed !important;
-            left: 50% !important;
-            bottom: max(18px, env(safe-area-inset-bottom)) !important;
-            z-index: 2147483647 !important;
-            transform: translateX(-50%) !important;
-            pointer-events: auto !important;
+        .ios-fullscreen-controls {
+            position: fixed;
+            left: 50%;
+            bottom: max(18px, env(safe-area-inset-bottom));
+            z-index: 2147483647;
+            display: none;
+            gap: 10px;
+            transform: translateX(-50%);
+            pointer-events: auto;
+        }
+
+        body.is-ios-fullscreen-active .video-custom-controls {
+            display: none;
+        }
+
+        body.is-ios-fullscreen-active .ios-fullscreen-controls {
+            display: flex;
         }
 
         .video-control-button {
@@ -190,9 +220,13 @@
                 aspect-ratio: 9 / 16;
             }
 
+            .video-custom-controls,
+            .ios-fullscreen-controls {
+                gap: 8px;
+            }
+
             .video-custom-controls {
                 bottom: 12px;
-                gap: 8px;
             }
 
             .video-control-button {
@@ -268,25 +302,11 @@
                 <div class="video-click-blocker" aria-hidden="true"></div>
 
                 <div class="video-custom-controls">
-                    <button id="play-button" class="video-control-button" type="button" aria-label="Reproduzir">
-                        ▶
-                    </button>
-
-                    <button id="pause-button" class="video-control-button" type="button" aria-label="Pausar">
-                        ❚❚
-                    </button>
-
-                    <button id="restart-button" class="video-control-button" type="button" aria-label="Recomeçar">
-                        ↻
-                    </button>
-
-                    <button id="volume-button" class="video-control-button" type="button" aria-label="Ativar som">
-                        🔇
-                    </button>
-
-                    <button id="fullscreen-button" class="video-control-button" type="button" aria-label="Aumentar tela">
-                        ⛶
-                    </button>
+                    <button id="play-button" class="video-control-button" type="button" aria-label="Reproduzir">▶</button>
+                    <button id="pause-button" class="video-control-button" type="button" aria-label="Pausar">❚❚</button>
+                    <button id="restart-button" class="video-control-button" type="button" aria-label="Recomeçar">↻</button>
+                    <button id="volume-button" class="video-control-button" type="button" aria-label="Ativar som">🔇</button>
+                    <button id="fullscreen-button" class="video-control-button" type="button" aria-label="Aumentar tela">⛶</button>
                 </div>
             </div>
         </section>
@@ -301,6 +321,14 @@
         </footer>
 
     </main>
+
+    <div class="ios-fullscreen-controls">
+        <button id="ios-play-button" class="video-control-button" type="button" aria-label="Reproduzir">▶</button>
+        <button id="ios-pause-button" class="video-control-button" type="button" aria-label="Pausar">❚❚</button>
+        <button id="ios-restart-button" class="video-control-button" type="button" aria-label="Recomeçar">↻</button>
+        <button id="ios-volume-button" class="video-control-button" type="button" aria-label="Ativar som">🔇</button>
+        <button id="ios-fullscreen-button" class="video-control-button" type="button" aria-label="Sair da tela cheia">✕</button>
+    </div>
 
     <script src="https://www.youtube.com/iframe_api"></script>
 
@@ -343,7 +371,7 @@
         function onPlayerReady(event) {
             event.target.mute();
             event.target.playVideo();
-            updateVolumeButton();
+            updateVolumeButtons();
         }
 
         function onPlayerStateChange(event) {
@@ -387,20 +415,28 @@
                 player.mute();
             }
 
-            updateVolumeButton();
+            updateVolumeButtons();
         }
 
-        function updateVolumeButton() {
-            const volumeButton = document.getElementById('volume-button');
-
-            if (!volumeButton || !player || typeof player.isMuted !== 'function') {
+        function updateVolumeButtons() {
+            if (!player || typeof player.isMuted !== 'function') {
                 return;
             }
 
             const isMuted = player.isMuted();
+            const buttons = [
+                document.getElementById('volume-button'),
+                document.getElementById('ios-volume-button')
+            ];
 
-            volumeButton.textContent = isMuted ? '🔇' : '🔊';
-            volumeButton.setAttribute('aria-label', isMuted ? 'Ativar som' : 'Desativar som');
+            buttons.forEach(function (button) {
+                if (!button) {
+                    return;
+                }
+
+                button.textContent = isMuted ? '🔇' : '🔊';
+                button.setAttribute('aria-label', isMuted ? 'Ativar som' : 'Desativar som');
+            });
         }
 
         function isIOSDevice() {
@@ -421,7 +457,7 @@
                 videoContainer.classList.toggle('is-ios-fullscreen', shouldOpen);
                 document.body.classList.toggle('is-ios-fullscreen-active', shouldOpen);
 
-                updateFullscreenButton();
+                updateFullscreenButtons();
                 return;
             }
 
@@ -433,25 +469,41 @@
             document.exitFullscreen?.();
         }
 
-        function updateFullscreenButton() {
-            const fullscreenButton = document.getElementById('fullscreen-button');
+        function updateFullscreenButtons() {
             const videoContainer = document.getElementById('video-container');
 
-            if (!fullscreenButton || !videoContainer) {
+            if (!videoContainer) {
                 return;
             }
 
             const isFullscreen = Boolean(document.fullscreenElement) ||
                 videoContainer.classList.contains('is-ios-fullscreen');
 
-            fullscreenButton.textContent = isFullscreen ? '✕' : '⛶';
-            fullscreenButton.setAttribute(
-                'aria-label',
-                isFullscreen ? 'Sair da tela cheia' : 'Aumentar tela'
-            );
+            const fullscreenButton = document.getElementById('fullscreen-button');
+            const iosFullscreenButton = document.getElementById('ios-fullscreen-button');
+
+            if (fullscreenButton) {
+                fullscreenButton.textContent = isFullscreen ? '✕' : '⛶';
+                fullscreenButton.setAttribute(
+                    'aria-label',
+                    isFullscreen ? 'Sair da tela cheia' : 'Aumentar tela'
+                );
+            }
+
+            if (iosFullscreenButton) {
+                iosFullscreenButton.textContent = isFullscreen ? '✕' : '⛶';
+                iosFullscreenButton.setAttribute(
+                    'aria-label',
+                    isFullscreen ? 'Sair da tela cheia' : 'Aumentar tela'
+                );
+            }
         }
 
         function onClickCta() {
+            if (typeof fbq === 'function') {
+                fbq('track', 'Lead');
+            }
+
             window.location.href = 'https://contaenergia.hiveglobal.com.br/?planId=de9ef5b8d2eeaae8&sellerId=israelnpereira';
         }
 
@@ -499,6 +551,11 @@
                 callback();
             });
 
+            button.addEventListener('touchstart', function (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }, { passive: false });
+
             button.addEventListener('touchend', function (event) {
                 event.preventDefault();
                 event.stopPropagation();
@@ -511,9 +568,16 @@
         bindButton('restart-button', restartVideo);
         bindButton('volume-button', toggleMute);
         bindButton('fullscreen-button', toggleFullscreen);
+
+        bindButton('ios-play-button', playVideo);
+        bindButton('ios-pause-button', pauseVideo);
+        bindButton('ios-restart-button', restartVideo);
+        bindButton('ios-volume-button', toggleMute);
+        bindButton('ios-fullscreen-button', toggleFullscreen);
+
         bindButton('cta-button', onClickCta);
 
-        document.addEventListener('fullscreenchange', updateFullscreenButton);
+        document.addEventListener('fullscreenchange', updateFullscreenButtons);
     </script>
 
 </body>
