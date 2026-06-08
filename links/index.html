@@ -1,17 +1,42 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Links Hive Energy</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hive Energy | Links</title>
+
+  <!-- Meta Pixel Code -->
+  <script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '2000252847529842');
+  fbq('track', 'PageView');
+  </script>
+  <noscript>
+    <img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=2000252847529842&ev=PageView&noscript=1"/>
+  </noscript>
+  <!-- End Meta Pixel Code -->
 
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
       min-height: 100vh;
-      font-family: Arial, sans-serif;
-      background: radial-gradient(circle at top, #7f60fd 0%, #111827 45%, #050505 100%);
-      color: white;
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at top, rgba(127, 96, 253, 0.55), transparent 42%),
+        linear-gradient(180deg, #111827 0%, #050505 100%);
+      color: #ffffff;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -20,115 +45,194 @@
 
     .container {
       width: 100%;
-      max-width: 430px;
+      max-width: 440px;
       text-align: center;
     }
 
-    .logo {
-      width: 180px;
-      max-width: 70%;
-      margin-bottom: 24px;
+    .card {
+      background: rgba(255, 255, 255, 0.065);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 28px;
+      padding: 34px 24px 26px;
+      box-shadow: 0 25px 80px rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(14px);
     }
 
-    .card {
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 24px;
-      padding: 28px 22px;
-      box-shadow: 0 20px 70px rgba(0,0,0,0.35);
-      backdrop-filter: blur(12px);
+    .logo-text {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 6px;
+      margin-bottom: 24px;
+      color: #8b73c7;
+      font-weight: 900;
+      letter-spacing: -2px;
+    }
+
+    .logo-small {
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      font-size: 20px;
+      letter-spacing: -1px;
+      opacity: 0.95;
+    }
+
+    .logo-big {
+      font-size: 58px;
+      line-height: 0.9;
+    }
+
+    .bolt {
+      color: #f6c453;
+      font-size: 42px;
+      margin-left: -4px;
     }
 
     h1 {
+      margin: 0 0 12px;
       font-size: 28px;
-      margin: 0 0 10px;
+      line-height: 1.15;
+      letter-spacing: -0.8px;
     }
 
     p {
+      margin: 0 0 26px;
       color: #d1d5db;
-      font-size: 15px;
-      line-height: 1.5;
-      margin-bottom: 26px;
+      font-size: 15.5px;
+      line-height: 1.55;
     }
 
     .botao {
       display: block;
       width: 100%;
-      box-sizing: border-box;
       margin: 14px 0;
-      padding: 17px 18px;
-      border-radius: 14px;
-      text-decoration: none;
+      padding: 18px 20px;
+      border-radius: 16px;
       color: white;
-      font-weight: 700;
+      text-decoration: none;
       font-size: 16px;
-      transition: transform 0.2s ease, background 0.2s ease;
+      font-weight: 800;
+      transition: 0.2s ease;
     }
 
     .botao:hover {
       transform: translateY(-2px);
-    }
-
-    .principal {
-      background: #7f60fd;
-    }
-
-    .principal:hover {
-      background: #6246d8;
+      filter: brightness(1.08);
     }
 
     .simulacao {
-      background: #10b981;
+      background: linear-gradient(135deg, #22c55e, #10b981);
+      box-shadow: 0 12px 35px rgba(16, 185, 129, 0.32);
     }
 
-    .simulacao:hover {
-      background: #059669;
+    .vsl {
+      background: linear-gradient(135deg, #8b5cf6, #7f60fd);
+      box-shadow: 0 12px 35px rgba(127, 96, 253, 0.32);
     }
 
     .whatsapp {
-      background: #22c55e;
+      background: linear-gradient(135deg, #25d366, #16a34a);
+      box-shadow: 0 12px 35px rgba(34, 197, 94, 0.28);
     }
 
-    .whatsapp:hover {
-      background: #16a34a;
-    }
-
-    .rodape {
+    .trust {
       margin-top: 22px;
+      color: #aeb4c0;
       font-size: 12px;
-      color: #9ca3af;
+      line-height: 1.5;
+    }
+
+    .badge {
+      display: inline-block;
+      margin-bottom: 18px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #d8d8e8;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    @media (max-width: 420px) {
+      .logo-big {
+        font-size: 48px;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+
+      .card {
+        padding: 30px 20px 24px;
+      }
     }
   </style>
 </head>
 
 <body>
   <main class="container">
-    <div class="card">
-      <img class="logo" src="https://licenciadohiveenergy.com.br/logo.png" alt="Hive Energy">
+    <section class="card">
 
-      <h1>Hive Energy</h1>
+      <div class="logo-text" aria-label="Hive Energy">
+        <span class="logo-small">hive</span>
+        <span class="logo-big">Energy</span>
+        <span class="bolt">⚡</span>
+      </div>
+
+      <div class="badge">Energia compartilhada • Lei 14.300</div>
+
+      <h1>Economize na conta de energia sem instalar placas solares</h1>
 
       <p>
-        Economize na conta de energia sem instalar placas solares.
-        Escolha uma opção abaixo.
+        Descubra se sua unidade consumidora pode receber desconto
+        através da energia compartilhada.
       </p>
 
-      <a class="botao principal" href="https://licenciadohiveenergy.com.br/">
-        Entender como funciona
-      </a>
-
-      <a class="botao simulacao" href="https://contaenergia.hiveglobal.com.br/?planId=de9ef5b8d2eeaae8&sellerId=israelnpereira">
+      <a class="botao simulacao"
+         href="https://contaenergia.hiveglobal.com.br/?planId=de9ef5b8d2eeaae8&sellerId=israelnpereira"
+         onclick="trackLeadSimulacao()">
         Fazer simulação gratuita
       </a>
 
-      <a class="botao whatsapp" href="https://wa.me/5531997522104">
+      <a class="botao vsl"
+         href="https://licenciadohiveenergy.com.br/"
+         onclick="trackViewVSL()">
+        Entender como funciona
+      </a>
+
+      <a class="botao whatsapp"
+         href="https://wa.me/5531997522104"
+         onclick="trackWhatsApp()">
         Falar no WhatsApp
       </a>
 
-      <div class="rodape">
-        Energia compartilhada • Sem obras • Sem instalação
+      <div class="trust">
+        Sem obras • Sem instalação • Sem trocar de concessionária
       </div>
-    </div>
+
+    </section>
   </main>
+
+  <script>
+    function trackViewVSL() {
+      if (typeof fbq === 'function') {
+        fbq('trackCustom', 'View_VSL');
+      }
+    }
+
+    function trackLeadSimulacao() {
+      if (typeof fbq === 'function') {
+        fbq('trackCustom', 'Lead_Simulacao');
+        fbq('track', 'Lead');
+      }
+    }
+
+    function trackWhatsApp() {
+      if (typeof fbq === 'function') {
+        fbq('trackCustom', 'WhatsApp_Click');
+        fbq('track', 'Contact');
+      }
+    }
+  </script>
 </body>
 </html>
